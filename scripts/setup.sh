@@ -1,3 +1,19 @@
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)
+      machine="$linux"
+      echo "OS Detected: ${machine}"
+      distro="$(awk -F= '/^NAME/{print $2}' /etc/os-release | sed -e 's/^"//' -e 's/"$//')"
+
+      case "${distro}" in
+        Ubuntu*)
+			sudo apt-get install libpq-dev -y
+          ;;
+         *)
+          ;;
+       esac
+esac
+
 
 if [[ ! -d ".git" ]]; then
   echo "You must run this script from the top-level (root) directory of this repository."

@@ -6,6 +6,7 @@ from mercury.models import (
     WheelSpeedSensor,
     SuspensionSensor,
     FuelLevelSensor,
+    WindSpeedSensor,
     EventCodeAccess,
 )
 
@@ -15,6 +16,7 @@ TEST_ACCEL_Y = 9.81
 TEST_WHEEL_SPEED_FR = 30
 TEST_SUSPENSION_FR = 2
 TEST_FUEL = 6
+TEST_WIND_SPEED = 5
 TEST_EVENT_CODE = "abcdefgh"
 
 
@@ -33,6 +35,9 @@ def create_simulated_data_objects():
     )
     FuelLevelSensor.objects.create(
         current_fuel_level=TEST_FUEL, created_at=datetime.datetime.now()
+    )
+    WindSpeedSensor.objects.create(
+        current_wind_speed=TEST_WIND_SPEED, created_at=datetime.datetime.now()
     )
     EventCodeAccess.objects.create(event_code=TEST_EVENT_CODE, enabled=False)
 
@@ -60,6 +65,10 @@ class TestSensorModels(TestCase):
     def test_fuel_level(self):
         foo = FuelLevelSensor.objects.get(current_fuel_level=TEST_FUEL)
         self.assertEqual(foo.current_fuel_level, TEST_FUEL)
+
+    def test_wind_speed(self):
+        foo = WindSpeedSensor.objects.get(current_wind_speed=TEST_WIND_SPEED)
+        self.assertEqual(foo.current_wind_speed, TEST_WIND_SPEED)
 
     def test_event_code_access(self):
         foo = EventCodeAccess.objects.get(event_code=TEST_EVENT_CODE, enabled=False)
