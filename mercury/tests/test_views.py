@@ -350,4 +350,4 @@ class TestSimulatorPost(TestCase):
             created_at=CREATED_AT, current_wind_speed=wind_speed
         )
         self.assertEqual(EXPECTED_CREATED_AT, foo.created_at)
-        self.assertEqual(wind_speed, foo.current_fuel_level)
+        self.assertEqual(wind_speed, foo.current_wind_speed)
