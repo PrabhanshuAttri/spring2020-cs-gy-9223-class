@@ -389,8 +389,8 @@ $(function () {
     });
 
     function create_post_wind() {
-        console.log("Entered create_post_wind() wind function.");
         let dateTime_wind = getDateTimenow();
+        console.log("Entered create_post_wind() wind function.");
         $.ajax({
             url: "", // the endpoint
             type: "POST", // http method

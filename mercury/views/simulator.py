@@ -94,12 +94,9 @@ class SimulatorView(TemplateView):
             )
             fl_data.save()
 
-        return HttpResponse(status=201)
-
         if request.POST.get("created_at_wind"):
             post_created_at = request.POST.get("created_at_wind")
             post_current_wind = request.POST.get("current_wind_speed")
-
             wind_data = WindSpeedSensor(
                 created_at=post_created_at, current_wind_speed=post_current_wind
             )
