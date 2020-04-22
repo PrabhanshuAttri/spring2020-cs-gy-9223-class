@@ -1,107 +1,68 @@
 """This module defines the ModelForms (or Forms) that are used by the rendering
 engine to accept input for various features of the site"""
 from django import forms
-from mercury.models import (
-    TemperatureSensor,
-    AccelerationSensor,
-    WheelSpeedSensor,
-    SuspensionSensor,
-    FuelLevelSensor,
-)
+from ag_data.models import AGEvent, AGVenue, AGSensor
+from mercury.models import GFConfig
 
 
-class TemperatureForm(forms.ModelForm):
+class VenueForm(forms.ModelForm):
     class Meta:
-        model = TemperatureSensor
+        model = AGVenue
         fields = "__all__"
         widgets = {
-            "created_at": forms.DateTimeInput(
-                attrs={"id": "post-created-at-temp", "required": True}
+            "name": forms.TextInput(attrs={"id": "post-event-name", "required": True}),
+            "description": forms.TextInput(
+                attrs={"id": "post-event-description", "required": True}
             ),
-            "temperature": forms.NumberInput(
-                attrs={"id": "post-temperature", "required": True}
+            "latitude": forms.TextInput(
+                attrs={"id": "post-event-latitude", "required": True}
+            ),
+            "longitude": forms.TextInput(
+                attrs={"id": "post-event-longitude", "required": True}
             ),
         }
 
 
-class AccelerationForm(forms.ModelForm):
+class EventForm(forms.ModelForm):
     class Meta:
-        model = AccelerationSensor
+        model = AGEvent
         fields = "__all__"
         widgets = {
-            "created_at": forms.DateTimeInput(
-                attrs={"id": "post-created-at_accel", "required": True}
+            "name": forms.TextInput(attrs={"id": "name", "required": True}),
+            "date": forms.DateTimeInput(
+                attrs={"id": "date", "required": True, "type": "datetime-local"}
             ),
-            "acceleration_x": forms.NumberInput(
-                attrs={"id": "post-acceleration-X", "required": True}
-            ),
-            "acceleration_y": forms.NumberInput(
-                attrs={"id": "post-acceleration-Y", "required": True}
-            ),
-            "acceleration_z": forms.NumberInput(
-                attrs={"id": "post-acceleration-Z", "required": True}
+            "description": forms.Textarea(
+                attrs={"id": "description", "required": False}
             ),
         }
 
 
-class WheelSpeedForm(forms.ModelForm):
+class GFConfigForm(forms.ModelForm):
     class Meta:
-        model = WheelSpeedSensor
-        fields = "__all__"
-        widgets = {
-            "created_at": forms.DateTimeInput(
-                attrs={"id": "post-created-at_ws", "required": True}
-            ),
-            "wheel_speed_fr": forms.NumberInput(
-                attrs={"id": "post-wheel-speed-fr", "required": True}
-            ),
-            "wheel_speed_fl": forms.NumberInput(
-                attrs={"id": "post-wheel-speed-fl", "required": True}
-            ),
-            "wheel_speed_br": forms.NumberInput(
-                attrs={"id": "post-wheel-speed-br", "required": True}
-            ),
-            "wheel_speed_bl": forms.NumberInput(
-                attrs={"id": "post-wheel-speed-bl", "required": True}
-            ),
+        model = GFConfig
+        fields = ["gf_name", "gf_host", "gf_token"]
+        labels = {
+            "gf_name": "Label",
+            "gf_host": "Hostname",
+            "gf_token": "API Token",
         }
+        default_data = {"gf_name": "Local", "gf_host": "http://localhost:3000"}
 
 
-class SuspensionForm(forms.ModelForm):
+class CustomModelChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return "%s" % (obj.name)
+
+
+class DashboardSensorPanelsForm(forms.ModelForm):
     class Meta:
-        model = SuspensionSensor
-        fields = "__all__"
-        widgets = {
-            "created_at": forms.DateTimeInput(
-                attrs={"id": "post-created-at_ss", "required": True}
-            ),
-            "suspension_fr": forms.NumberInput(
-                attrs={"id": "post-suspension-fr", "required": True}
-            ),
-            "suspension_fl": forms.NumberInput(
-                attrs={"id": "post-suspension-fl", "required": True}
-            ),
-            "suspension_br": forms.NumberInput(
-                attrs={"id": "post-suspension-br", "required": True}
-            ),
-            "suspension_bl": forms.NumberInput(
-                attrs={"id": "post-suspension-bl", "required": True}
-            ),
-        }
+        model = AGSensor
+        exclude = ["id", "name", "type_id"]
 
-
-class FuelLevelForm(forms.ModelForm):
-    class Meta:
-        model = FuelLevelSensor
-        fields = "__all__"
-        widgets = {
-            "created_at": forms.DateTimeInput(
-                attrs={"id": "post-created-at_fl", "required": True}
-            ),
-            "current_fuel_level": forms.NumberInput(
-                attrs={"id": "post-current-fuel-level", "required": True}
-            ),
-        }
+    sensors = CustomModelChoiceField(
+        widget=forms.CheckboxSelectMultiple, queryset=AGSensor.objects.all(), label=""
+    )
 
 
 class CANForm(forms.Form):

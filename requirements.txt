@@ -5,3 +5,17 @@ django-heroku==0.3.*
 django-crispy-forms==1.8.*
 python-dotenv==0.10.*
 whitenoise==4.1.4
+pySerial
+djangorestframework
+markdown
+django-filter
+django-import-export
+drf-yasg
+selenium==3.141.0
+django-annoying
+mock
+requests
+matplotlib
+attr
+django-bootstrap4
+django-js-reverse
